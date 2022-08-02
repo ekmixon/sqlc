@@ -34,9 +34,12 @@ def _find_sql_files(paths: List[str]) -> List[str]:
         if not os.path.exists(path):
             raise FileNotFoundError(f"{path} does not exist")
         if os.path.isdir(path):
-            for file in os.listdir(path):
-                if file.endswith(".sql"):
-                    files.append(os.path.join(path, file))
+            files.extend(
+                os.path.join(path, file)
+                for file in os.listdir(path)
+                if file.endswith(".sql")
+            )
+
         else:
             files.append(path)
     files.sort()

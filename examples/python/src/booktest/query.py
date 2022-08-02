@@ -142,11 +142,13 @@ class AsyncQuerier:
 
     async def create_author(self, *, name: str) -> Optional[models.Author]:
         row = (await self._conn.execute(sqlalchemy.text(CREATE_AUTHOR), {"p1": name})).first()
-        if row is None:
-            return None
-        return models.Author(
-            author_id=row[0],
-            name=row[1],
+        return (
+            None
+            if row is None
+            else models.Author(
+                author_id=row[0],
+                name=row[1],
+            )
         )
 
     async def create_book(self, arg: CreateBookParams) -> Optional[models.Book]:
@@ -177,11 +179,13 @@ class AsyncQuerier:
 
     async def get_author(self, *, author_id: int) -> Optional[models.Author]:
         row = (await self._conn.execute(sqlalchemy.text(GET_AUTHOR), {"p1": author_id})).first()
-        if row is None:
-            return None
-        return models.Author(
-            author_id=row[0],
-            name=row[1],
+        return (
+            None
+            if row is None
+            else models.Author(
+                author_id=row[0],
+                name=row[1],
+            )
         )
 
     async def get_book(self, *, book_id: int) -> Optional[models.Book]:

@@ -10,7 +10,13 @@ from dbtest.migrations import apply_migrations_async
 
 @pytest.mark.asyncio
 async def test_books(async_db: sqlalchemy.ext.asyncio.AsyncConnection):
-    await apply_migrations_async(async_db, [os.path.dirname(__file__) + "/../../../booktest/postgresql/schema.sql"])
+    await apply_migrations_async(
+        async_db,
+        [
+            f"{os.path.dirname(__file__)}/../../../booktest/postgresql/schema.sql"
+        ],
+    )
+
 
     querier = query.AsyncQuerier(async_db)
 
@@ -70,13 +76,13 @@ async def test_books(async_db: sqlalchemy.ext.asyncio.AsyncConnection):
 
         author = await querier.get_author(author_id=book.author_id)
         assert author.name == "Unknown Master"
-    assert len(expected_titles) == 0
+    assert not expected_titles
 
     books = querier.books_by_tags(dollar_1=["cool", "other", "someother"])
     expected_titles = {"changed second title", "the third book", "never ever gonna finish, a quatrain"}
     async for book in books:
         expected_titles.remove(book.title)
-    assert len(expected_titles) == 0
+    assert not expected_titles
 
     b5 = await querier.get_book(book_id=b3.book_id)
     assert b5 is not None

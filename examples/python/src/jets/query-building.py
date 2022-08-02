@@ -31,9 +31,7 @@ class AsyncQuerier:
 
     async def count_pilots(self) -> Optional[int]:
         row = (await self._conn.execute(sqlalchemy.text(COUNT_PILOTS))).first()
-        if row is None:
-            return None
-        return row[0]
+        return None if row is None else row[0]
 
     async def delete_pilot(self, *, id: int) -> None:
         await self._conn.execute(sqlalchemy.text(DELETE_PILOT), {"p1": id})

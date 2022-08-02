@@ -11,7 +11,11 @@ from dbtest.migrations import apply_migrations_async
 
 @pytest.mark.asyncio
 async def test_ondeck(async_db: sqlalchemy.ext.asyncio.AsyncConnection):
-    await apply_migrations_async(async_db, [os.path.dirname(__file__) + "/../../../ondeck/postgresql/schema"])
+    await apply_migrations_async(
+        async_db,
+        [f"{os.path.dirname(__file__)}/../../../ondeck/postgresql/schema"],
+    )
+
 
     city_querier = city_queries.AsyncQuerier(async_db)
     venue_querier = venue_queries.AsyncQuerier(async_db)

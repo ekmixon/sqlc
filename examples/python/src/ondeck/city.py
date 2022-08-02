@@ -48,20 +48,24 @@ class AsyncQuerier:
 
     async def create_city(self, *, name: str, slug: str) -> Optional[models.City]:
         row = (await self._conn.execute(sqlalchemy.text(CREATE_CITY), {"p1": name, "p2": slug})).first()
-        if row is None:
-            return None
-        return models.City(
-            slug=row[0],
-            name=row[1],
+        return (
+            None
+            if row is None
+            else models.City(
+                slug=row[0],
+                name=row[1],
+            )
         )
 
     async def get_city(self, *, slug: str) -> Optional[models.City]:
         row = (await self._conn.execute(sqlalchemy.text(GET_CITY), {"p1": slug})).first()
-        if row is None:
-            return None
-        return models.City(
-            slug=row[0],
-            name=row[1],
+        return (
+            None
+            if row is None
+            else models.City(
+                slug=row[0],
+                name=row[1],
+            )
         )
 
     async def list_cities(self) -> AsyncIterator[models.City]:

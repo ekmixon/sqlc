@@ -104,9 +104,7 @@ class AsyncQuerier:
             "p6": arg.statuses,
             "p7": arg.tags,
         })).first()
-        if row is None:
-            return None
-        return row[0]
+        return None if row is None else row[0]
 
     async def delete_venue(self, *, slug: str) -> None:
         await self._conn.execute(sqlalchemy.text(DELETE_VENUE), {"p1": slug})
@@ -146,9 +144,7 @@ class AsyncQuerier:
 
     async def update_venue_name(self, *, slug: str, name: str) -> Optional[int]:
         row = (await self._conn.execute(sqlalchemy.text(UPDATE_VENUE_NAME), {"p1": slug, "p2": name})).first()
-        if row is None:
-            return None
-        return row[0]
+        return None if row is None else row[0]
 
     async def venue_count_by_city(self) -> AsyncIterator[VenueCountByCityRow]:
         result = await self._conn.stream(sqlalchemy.text(VENUE_COUNT_BY_CITY))
